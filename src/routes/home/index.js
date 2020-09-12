@@ -1,5 +1,5 @@
 import { h } from "preact";
-import style from "./style.css";
+import { css } from "@filbert-js/macro";
 
 const Home = () => (
   <div
