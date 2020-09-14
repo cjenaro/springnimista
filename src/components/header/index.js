@@ -9,7 +9,7 @@ const A = styled(Link)`
   padding: 0 15px;
   min-width: 50px;
   text-align: center;
-  background: rgba(255, 255, 255, 0);
+  background-color: var(--main-color);
   text-decoration: none;
   color: #fff;
   will-change: background-color;
@@ -32,7 +32,7 @@ const Header = () => (
       width: 100%;
       height: 56px;
       padding: 0;
-      background: #673ab7;
+      background-color: var(--main-color);
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
       z-index: 50;
     `}

@@ -8,12 +8,20 @@ import Home from "../routes/home";
 import SecondCategory from "../routes/second-category";
 import ThirdCategory from "../routes/third-category";
 import Animation from "../routes/animation";
+import { AppStateProvider } from "../context/app-state";
 
-const App = () => (
-  <div id="app">
-    <Global
-      styles={`
+const App = () => {
+  return (
+    <AppStateProvider>
+      <div id="app">
+        <Global
+          styles={`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@500&display=swap');
+
+        :root {
+          --main-color: #0D3B66;
+          --secondary-color: #F95738;
+        }
 
         html,
         body {
@@ -42,33 +50,38 @@ const App = () => (
           height: 100%;
         }
       `}
-    />
-    <Header />
-    <main>
-      <Router>
-        <Home path="/" />
-        <Match path="/:category/:secondCategory?/:thirdCategory?">
-          {({ matches, path, url }) => {
-            const pathParts = path.split("/");
+        />
+        <Header />
+        <main>
+          <Router>
+            <Home path="/" />
+            <Match path="/:category/:secondCategory?/:thirdCategory?">
+              {({ matches, path, url }) => {
+                const pathParts = path.split("/");
 
-            return (
-              <>
-                {pathParts.length > 1 && (
-                  <SecondCategory path={path} category={pathParts[1]} />
-                )}
-                {pathParts.length > 2 && (
-                  <ThirdCategory path={path} secondCategory={pathParts[2]} />
-                )}
-                {pathParts.length > 3 && (
-                  <Animation path={path} category={pathParts[3]} />
-                )}
-              </>
-            );
-          }}
-        </Match>
-      </Router>
-    </main>
-  </div>
-);
+                return (
+                  <>
+                    {pathParts.length > 1 && (
+                      <SecondCategory path={path} category={pathParts[1]} />
+                    )}
+                    {pathParts.length > 2 && (
+                      <ThirdCategory
+                        path={path}
+                        secondCategory={pathParts[2]}
+                      />
+                    )}
+                    {pathParts.length > 3 && (
+                      <Animation path={path} category={pathParts[3]} />
+                    )}
+                  </>
+                );
+              }}
+            </Match>
+          </Router>
+        </main>
+      </div>
+    </AppStateProvider>
+  );
+};
 
 export default App;
