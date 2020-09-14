@@ -1,11 +1,16 @@
 import { useEffect, useState } from "preact/hooks";
 import { createContext } from "preact";
 
-const AppContext = createContext({});
+const AppContext = createContext(window.location);
 const LocalStateProvider = AppContext.Provider;
 
 function AppStateProvider(props) {
-  const [appState, setAppState] = useState({});
+  const [, category, group, variation] = window.location.pathname.split("/");
+  const [appState, set] = useState({ category, group, variation });
+
+  const setAppState = (state) => {
+    set({ ...appState, ...state });
+  };
 
   useEffect(() => {
     async function fetchAnimista() {
@@ -31,6 +36,7 @@ function AppStateProvider(props) {
     <LocalStateProvider
       value={{
         appState,
+        setAppState,
       }}
     >
       {props.children}

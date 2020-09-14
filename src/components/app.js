@@ -67,11 +67,17 @@ const App = () => {
                     {pathParts.length > 2 && (
                       <ThirdCategory
                         path={path}
+                        category={pathParts[1]}
                         secondCategory={pathParts[2]}
                       />
                     )}
                     {pathParts.length > 3 && (
-                      <Animation path={path} category={pathParts[3]} />
+                      <Animation
+                        path={path}
+                        thirdCategory={pathParts[3]}
+                        secondCategory={pathParts[2]}
+                        category={pathParts[1]}
+                      />
                     )}
                   </>
                 );
