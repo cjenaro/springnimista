@@ -46,8 +46,19 @@ const App = () => {
         }
 
         main {
-          padding-top: 56px;
+          --header-height: 56px;
+          padding-top: var(--header-height);
           height: 100%;
+          display: grid;
+          grid-template-rows: 100px 100px auto;
+
+          @media (min-width: 526px) {
+            --header-height: 120px;
+          }
+
+          @media (min-width: 742px) {
+            --header-height: 56px;
+          }
         }
       `}
         />

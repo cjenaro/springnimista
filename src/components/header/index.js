@@ -6,7 +6,7 @@ import { AppContext } from "../../context/app-state";
 
 const A = styled(Link)`
   display: inline-block;
-  height: 56px;
+  min-height: 56px;
   line-height: 56px;
   padding: 0 15px;
   min-width: 50px;
@@ -39,7 +39,7 @@ const Header = () => {
         left: 0;
         top: 0;
         width: 100%;
-        height: 56px;
+        min-height: 56px;
         padding: 0;
         background-color: var(--main-color);
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);

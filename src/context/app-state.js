@@ -14,6 +14,7 @@ function AppStateProvider(props) {
 
   useEffect(() => {
     async function fetchAnimista() {
+      setAppState({ loading: true });
       const blob = await fetch(
         "https://cors-anywhere.herokuapp.com/https://animista.net/animista.json",
         {
@@ -23,10 +24,10 @@ function AppStateProvider(props) {
             Host: "animista.net",
           },
         }
-      ).catch((err) => setAppState({ error: err }));
+      ).catch((err) => setAppState({ error: err, loading: false }));
 
       const json = await blob.json();
-      setAppState({ categories: json.categories });
+      setAppState({ categories: json.categories, loading: false });
     }
 
     fetchAnimista();

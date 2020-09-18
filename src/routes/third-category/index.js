@@ -2,11 +2,12 @@ import { h } from "preact";
 import { Link } from "preact-router/match";
 import { useContext } from "preact/hooks";
 import { AppContext } from "../../context/app-state";
+import NavLoader from "../../components/nav-loader";
 import { css } from "@filbert-js/macro";
 
 const ThirdCategory = ({ path }) => {
   const { appState, setAppState } = useContext(AppContext);
-  const { category, group, variation } = appState;
+  const { category, group, variation, loading } = appState;
   const variations =
     appState &&
     appState.categories &&
@@ -19,10 +20,12 @@ const ThirdCategory = ({ path }) => {
     setAppState({ variation });
   };
 
+  if (loading) return <NavLoader key={`third=${loading}`} />;
   if (!variations) return null;
   return (
     <nav
       css={css`
+        min-height: 100px;
         display: flex;
         align-items: center;
         gap: 1em;
