@@ -328,12 +328,6 @@ const AnimatedBox = ({ animation: [from, ...to], config }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!flipped) return;
-    if (!divRef.current) return;
-    divRef.current.removeAttribute("style");
-  }, [flipped]);
-
   const springObj = {
     to: async (next) => {
       for (let i = 0; i < to.length; i++) {
@@ -345,36 +339,6 @@ const AnimatedBox = ({ animation: [from, ...to], config }) => {
   };
 
   const props = useSpring(springObj);
-  const btnText = "Click to see the code!";
-  const btnFlipProps = useSpring(
-    flipped
-      ? {
-          backgroundColor: "var(--main-color)",
-          borderRadius: "50%",
-          position: "fixed",
-          top: "81px",
-          right: "25px",
-          textL: 0,
-          maxHeight: "50px",
-          maxWidth: "50px",
-          width: "100%",
-          height: "100%",
-          fontSize: "1.3rem",
-        }
-      : {
-          backgroundColor: "transparent",
-          borderRadius: "0%",
-          position: "static",
-          top: "0px",
-          right: "0px",
-          textL: btnText.length,
-          maxWidth: "1000px",
-          maxHeight: "1000px",
-          width: "100%",
-          height: "100%",
-          fontSize: "3rem",
-        }
-  );
 
   const preFlipProps = useSpring(
     flipped
@@ -407,7 +371,7 @@ const AnimatedBox = ({ animation: [from, ...to], config }) => {
               justify-content: center;
             `}
           >
-            <animated.button
+            <button
               css={css`
                 cursor: pointer;
                 font-size: 3rem;
@@ -420,13 +384,10 @@ const AnimatedBox = ({ animation: [from, ...to], config }) => {
                   outline: none;
                 }
               `}
-              style={btnFlipProps}
               onClick={() => setFlipped(!flipped)}
             >
-              {btnFlipProps.textL.interpolate((x) =>
-                x > 0 ? btnText.slice(0, x) : "X"
-              )}
-            </animated.button>
+              Click to see the code!
+            </button>
           </div>
         </animated.div>
       </div>
@@ -434,6 +395,7 @@ const AnimatedBox = ({ animation: [from, ...to], config }) => {
         style={preFlipProps}
         css={css`
           padding: 5rem 2rem 2rem;
+          font-size: 1.4rem;
           max-width: 100%;
           overflow: scroll;
           height: 100vh;
@@ -465,6 +427,25 @@ const AnimatedBox = ({ children }) => {
   return <animated.div style={props}>{children}</animated.div>
 }
          `}
+
+        <button
+          onClick={() => setFlipped(!flipped)}
+          css={css`
+            position: absolute;
+            border: 0;
+            color: #ffffff;
+            background-color: var(--main-color);
+            border-radius: 50%;
+            top: 81px;
+            right: 25px;
+            height: 70px;
+            width: 70px;
+            cursor: pointer;
+            font-size: 1.3rem;
+          `}
+        >
+          ESC
+        </button>
       </animated.pre>
     </>
   );
