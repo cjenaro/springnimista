@@ -176,6 +176,7 @@ const Animation = () => {
         align-content: center;
         justify-items: center;
         grid-template-columns: 1fr;
+        position: relative;
 
         @media (min-width: 768px) {
           grid-template-rows: 1fr;
@@ -379,7 +380,6 @@ const AnimatedBox = ({ animation: [from, ...to], config }) => {
                 font-weight: bold;
                 background-color: transparent;
                 border: 0;
-                z-index: 1000;
                 &:focus {
                   outline: none;
                 }
@@ -427,26 +427,26 @@ const AnimatedBox = ({ children }) => {
   return <animated.div style={props}>{children}</animated.div>
 }
          `}
-
-        <button
-          onClick={() => setFlipped(!flipped)}
-          css={css`
-            position: absolute;
-            border: 0;
-            color: #ffffff;
-            background-color: var(--main-color);
-            border-radius: 50%;
-            top: 81px;
-            right: 25px;
-            height: 70px;
-            width: 70px;
-            cursor: pointer;
-            font-size: 1.3rem;
-          `}
-        >
-          ESC
-        </button>
       </animated.pre>
+      <button
+        onClick={() => setFlipped(!flipped)}
+        css={css`
+          position: absolute;
+          border: 0;
+          color: #ffffff;
+          background-color: var(--main-color);
+          border-radius: 50%;
+          top: 25px;
+          right: 25px;
+          height: 70px;
+          width: 70px;
+          cursor: pointer;
+          font-size: 1.3rem;
+          z-index: 100;
+        `}
+      >
+        {flipped ? "ESC" : "Code!"}
+      </button>
     </>
   );
 };
