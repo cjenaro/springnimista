@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useContext, useEffect, useState } from "preact/hooks";
+import { useRef, useContext, useEffect, useState } from "preact/hooks";
 import { AppContext } from "../../context/app-state";
 import { css } from "@filbert-js/macro";
 import useAnimateOnShow from "@cjenaro/useanimateonshow";
@@ -312,6 +312,28 @@ export default Animation;
 
 const AnimatedBox = ({ animation: [from, ...to], config }) => {
   const [flipped, setFlipped] = useState(false);
+  const divRef = useRef(null);
+
+  useEffect(() => {
+    const listener = window.addEventListener("keydown", (e) => {
+      switch (e.keyCode) {
+        case 27:
+          setFlipped(false);
+          break;
+      }
+    });
+
+    return () => {
+      window.removeEventListener("keydown", listener);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!flipped) return;
+    if (!divRef.current) return;
+    divRef.current.removeAttribute("style");
+  }, [flipped]);
+
   const springObj = {
     to: async (next) => {
       for (let i = 0; i < to.length; i++) {
@@ -322,66 +344,110 @@ const AnimatedBox = ({ animation: [from, ...to], config }) => {
     config,
   };
 
-  const [flippedFrom, ...flippedTo] = [...to, from];
-
-  const flippedObj = {
-    to: async (next) => {
-      for (let i = 0; i < flippedTo.length; i++) {
-        await next({ ...flippedTo[i] });
-      }
-    },
-    from: flippedFrom,
-    config,
-  };
-
-  const props = useSpring(flipped ? flippedObj : springObj);
-  const flipProps = useSpring(
+  const props = useSpring(springObj);
+  const btnText = "Click to see the code!";
+  const btnFlipProps = useSpring(
     flipped
       ? {
-          maxHeight: "100vw",
-          color: "#fff",
-          transform: "rotate3d(1,1,1, 0deg)",
+          backgroundColor: "var(--main-color)",
+          borderRadius: "50%",
+          position: "fixed",
+          top: "81px",
+          right: "25px",
+          textL: 0,
+          maxHeight: "50px",
+          maxWidth: "50px",
+          width: "100%",
+          height: "100%",
+          fontSize: "1.3rem",
         }
       : {
-          maxHeight: "20vw",
-          color: "#222",
-          transform: "rotate3d(1, 1, 0, 180deg)",
+          backgroundColor: "transparent",
+          borderRadius: "0%",
+          position: "static",
+          top: "0px",
+          right: "0px",
+          textL: btnText.length,
+          maxWidth: "1000px",
+          maxHeight: "1000px",
+          width: "100%",
+          height: "100%",
+          fontSize: "3rem",
+        }
+  );
+
+  const preFlipProps = useSpring(
+    flipped
+      ? {
+          opacity: 1,
+          pointerEvents: "all",
+        }
+      : {
+          opacity: 0,
+          pointerEvents: "none",
         }
   );
 
   return (
-    <div
-      css={css`
-        align-self: center;
-      `}
-    >
-      <animated.div style={props}>
-        <animated.div
-          style={{ maxHeight: flipProps.maxHeight }}
-          css={css`
-            border-radius: 5px;
-            background-color: #222;
-            width: 50vw;
-            min-height: 20vw;
-          `}
-        >
-          <animated.div
+    <>
+      <div
+        css={css`
+          align-self: center;
+        `}
+      >
+        <animated.div ref={divRef} style={props}>
+          <div
             css={css`
+              border-radius: 5px;
+              background-color: #222;
+              width: 50vw;
+              min-height: 20vw;
               display: flex;
               align-items: center;
               justify-content: center;
             `}
-            style={flipProps}
           >
-            {flipped ? (
-              <pre
-                css={css`
-                  padding: 2rem;
-                  max-width: 44vw;
-                  overflow: scroll;
-                `}
-              >
-                {`
+            <animated.button
+              css={css`
+                cursor: pointer;
+                font-size: 3rem;
+                color: white;
+                font-weight: bold;
+                background-color: transparent;
+                border: 0;
+                z-index: 1000;
+                &:focus {
+                  outline: none;
+                }
+              `}
+              style={btnFlipProps}
+              onClick={() => setFlipped(!flipped)}
+            >
+              {btnFlipProps.textL.interpolate((x) =>
+                x > 0 ? btnText.slice(0, x) : "X"
+              )}
+            </animated.button>
+          </div>
+        </animated.div>
+      </div>
+      <animated.pre
+        style={preFlipProps}
+        css={css`
+          padding: 5rem 2rem 2rem;
+          max-width: 100%;
+          overflow: scroll;
+          height: 100vh;
+          width: 100vw;
+          background-color: #222;
+          color: #fff;
+          position: fixed;
+          opacity: 0;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+        `}
+      >
+        {`
 const AnimatedBox = ({ children }) => {
   const config: ${JSON.stringify(config, null, 2)}
   const from: ${JSON.stringify(from, null, 2)}
@@ -399,26 +465,7 @@ const AnimatedBox = ({ children }) => {
   return <animated.div style={props}>{children}</animated.div>
 }
          `}
-              </pre>
-            ) : (
-              <button
-                css={css`
-                  cursor: pointer;
-                  font-size: 3rem;
-                  color: white;
-                  font-weight: bold;
-                  background-color: transparent;
-                  border: 0;
-                  transform: rotate3d(1, 1, 0, -180deg) translateY(2rem);
-                `}
-                onClick={() => setFlipped(!flipped)}
-              >
-                Click to see the code!
-              </button>
-            )}
-          </animated.div>
-        </animated.div>
-      </animated.div>
-    </div>
+      </animated.pre>
+    </>
   );
 };
